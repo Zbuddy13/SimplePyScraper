@@ -5,6 +5,12 @@ import os
 import smtplib
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+term = os.environ.get('SEARCHTERM', "b580")
+sleep = os.environ.get('SLEEP', 0.084)
+
+if not os.path.exists(os.getcwd()+'/json'):
+    os.mkdir(os.getcwd()+'/json')
+
 backup = os.getcwd()+'/json'
 os.chdir(backup)
 
@@ -19,7 +25,7 @@ def neweggButton():
 
 def neweggPage():
     try:
-        r = requests.get('https://www.newegg.com/p/pl?d=b580')
+        r = requests.get('https://www.newegg.com/p/pl?d='+term)
         print("Success: Website read")
     except Exception as e:
         print("Error: " + e.message)
@@ -55,7 +61,6 @@ def compare(newData, file):
         print("Error: " + e.message)
 
 def neweggCreateDict(names, prices):
-
     elements = len(names)
     thisDict = {}
     for i in range(elements):
@@ -69,9 +74,7 @@ def emailChange(text):
         smtp_server.ehlo()
         smtp_server.starttls()
         smtp_server.login('jzshaw13@gmail.com', 'ikgn jyfk igms wvid')
-
         smtp_server.sendmail('jzshaw13@gmail.com', 'jzshaw18@gmail.com', text)
-
         smtp_server.quit()
         print('Email sent successfully')
     except Exception as e:
@@ -80,5 +83,5 @@ def emailChange(text):
 
 neweggPage()
 scheduler = BlockingScheduler()
-scheduler.add_job(neweggPage,'interval', hours=0.015)
+scheduler.add_job(neweggPage,'interval', hours=sleep)
 scheduler.start()
