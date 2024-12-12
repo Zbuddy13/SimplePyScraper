@@ -12,7 +12,7 @@ RUN apk upgrade
 WORKDIR /app
 COPY . .
 
-#Token variable
+#Variables
 ENV SEARCHTERM="SEARCHTERM"
 ENV SLEEP="SLEEP"
 ENV FILE_NAME="FILE_NAME"
