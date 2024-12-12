@@ -4,24 +4,20 @@ import json
 import os
 import smtplib
 from apscheduler.schedulers.blocking import BlockingScheduler
+from email.mime.text import MIMEText
 
-term = os.environ.get('SEARCHTERM', "b580")
+term = os.environ.get('SEARCH_TERM', "b580")
 sleep = os.environ.get('SLEEP', 0.084)
+jsonFile = os.environ.get('FILE_NAME', 'newegg.json')
+fromAddress = os.environ.get('FROM_EMAIL', 'jzshaw13@gmail.com')
+toAddress = os.environ.get('TO_EMAIL', 'jzshaw18@gmail.com')
+emailAppPassword = os.environ.get('APP_PASSWORD', 'ikgn jyfk igms wvid')
 
 if not os.path.exists(os.getcwd()+'/json'):
     os.mkdir(os.getcwd()+'/json')
 
 backup = os.getcwd()+'/json'
 os.chdir(backup)
-
-def neweggButton():
-    r = requests.get('https://www.newegg.com/p/N82E16814883006')
-
-    soup = BeautifulSoup(r.content, 'html.parser')
-
-    s = soup.find('button', class_='btn')
-
-    print(s.get_text())
 
 def neweggPage():
     try:
@@ -34,9 +30,14 @@ def neweggPage():
 
     itemNames = soup.find_all('a', class_='item-title')
     itemPrices = soup.find_all('div', class_='item-button-area')
-    filteredNames = [string for string in itemNames if "B580" in string.get_text()]
+    #itemLinks = soup.find_all('a', class_='item-img', rel_=False)
+    for i in itemNames:
+        if term.lower() not in i.get_text().lower():
+            itemNames.remove(i)
+    #print(itemNames[0]['href'])
+    #filteredNames = [string for string in itemNames if "B580" in string.get_text()]
 
-    itemsDict = neweggCreateDict(filteredNames, itemPrices)
+    itemsDict = neweggCreateDict(itemNames, itemPrices)
 
     compare(itemsDict, 'newegg.json')
 
@@ -55,8 +56,9 @@ def compare(newData, file):
             with open(file, 'r') as f:
                 oldData = json.load(f)
             for item in newData:
-                if newData[item] != oldData[item]:
-                    emailChange(item+' Status Changed')
+                if newData[item][0] != oldData[item][0]:
+                    emailChange(item+' Status Changed to '+ newData[item][0], " Link: " + newData[item][1])
+                    #print(item+' Status Changed to '+ newData[item][0] + "Link " + newData[item][1])
     except Exception as e:
         print("Error: " + e.message)
 
@@ -64,22 +66,25 @@ def neweggCreateDict(names, prices):
     elements = len(names)
     thisDict = {}
     for i in range(elements):
-        thisDict[names[i].get_text()] = prices[i].get_text()
+        thisDict[names[i].get_text()] = (prices[i].get_text(),names[i]['href'])
     
     return thisDict
 
-def emailChange(text):
+def emailChange(subject, text):
     try:
         smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
         smtp_server.ehlo()
         smtp_server.starttls()
-        smtp_server.login('jzshaw13@gmail.com', 'ikgn jyfk igms wvid')
-        smtp_server.sendmail('jzshaw13@gmail.com', 'jzshaw18@gmail.com', text)
+        smtp_server.login(fromAddress, emailAppPassword)
+        message = MIMEText(text)
+        message['From'] = fromAddress
+        message['To'] = toAddress
+        message['Subject'] = subject
+        smtp_server.sendmail(fromAddress, toAddress, message.as_string())
         smtp_server.quit()
         print('Email sent successfully')
     except Exception as e:
         print("Error: " + e.message)
-
 
 neweggPage()
 scheduler = BlockingScheduler()
