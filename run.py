@@ -1,6 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import os
+
+backup = os.getcwd()+'/json'
+os.chdir(backup)
 
 def neweggButton():
     r = requests.get('https://www.newegg.com/p/N82E16814883006')
@@ -20,21 +24,33 @@ def neweggPage():
     itemPrices = soup.find_all('div', class_='item-button-area')
     filteredNames = [string for string in itemNames if "B580" in string.get_text()]
 
-    neweggJson(filteredNames, itemPrices)
+    itemsDict = neweggCreateDict(filteredNames, itemPrices)
+
+    compare(itemsDict, 'newegg.json')
+
+    jsonObj = json.dumps(itemsDict, indent=4)
+    with open("newegg.json", "w") as outFile:
+        outFile.write(jsonObj)
 
 
-#def compare():
+def compare(newData, file):
+    if os.path.isfile(backup+'/'+file):
+        with open(file, 'r') as f:
+            oldData = json.load(f)
+        for item in newData:
+            if newData[item] != oldData[item]:
+                print(item+' Status Changed')
 
-def neweggJson(names, prices):
+def neweggCreateDict(names, prices):
 
     elements = len(names)
     thisDict = {}
     for i in range(elements):
         thisDict[names[i].get_text()] = prices[i].get_text()
     
-    thisJson = json.dumps(thisDict)
+    return thisDict
 
-    print(thisJson)
+#def emailChange():
 
 
 
