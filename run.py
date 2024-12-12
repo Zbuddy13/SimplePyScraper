@@ -6,12 +6,12 @@ import smtplib
 from apscheduler.schedulers.blocking import BlockingScheduler
 from email.mime.text import MIMEText
 
-term = os.environ.get('SEARCH_TERM', "b580")
+term = os.environ.get('SEARCH_TERM', "")
 sleep = os.environ.get('SLEEP', 0.084)
-jsonFile = os.environ.get('FILE_NAME', 'newegg.json')
-fromAddress = os.environ.get('FROM_EMAIL', 'jzshaw13@gmail.com')
-toAddress = os.environ.get('TO_EMAIL', 'jzshaw18@gmail.com')
-emailAppPassword = os.environ.get('APP_PASSWORD', 'ikgn jyfk igms wvid')
+jsonFile = os.environ.get('FILE_NAME', '')
+fromAddress = os.environ.get('FROM_EMAIL', '')
+toAddress = os.environ.get('TO_EMAIL', '')
+emailAppPassword = os.environ.get('APP_PASSWORD', '')
 
 if not os.path.exists(os.getcwd()+'/json'):
     os.mkdir(os.getcwd()+'/json')
