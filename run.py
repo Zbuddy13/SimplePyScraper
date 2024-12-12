@@ -88,5 +88,5 @@ def emailChange(subject, text):
 
 neweggPage()
 scheduler = BlockingScheduler()
-scheduler.add_job(neweggPage,'interval', hours=sleep)
+scheduler.add_job(neweggPage,'interval', hours=int(sleep))
 scheduler.start()
