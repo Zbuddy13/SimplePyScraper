@@ -7,7 +7,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from email.mime.text import MIMEText
 
 term = os.environ.get('SEARCH_TERM', "")
-sleep = os.environ.get('SLEEP', 0.084)
+sleep = os.environ.get('SLEEP', 5)
 jsonFile = os.environ.get('FILE_NAME', '')
 fromAddress = os.environ.get('FROM_EMAIL', '')
 toAddress = os.environ.get('TO_EMAIL', '')
@@ -89,5 +89,5 @@ def emailChange(subject, text):
 
 neweggPage()
 scheduler = BlockingScheduler()
-scheduler.add_job(neweggPage,'interval', hours=int(float(sleep)))
+scheduler.add_job(neweggPage,'interval', minutes=int(sleep))
 scheduler.start()
