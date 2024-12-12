@@ -5,6 +5,11 @@ import os
 import smtplib
 from apscheduler.schedulers.blocking import BlockingScheduler
 from email.mime.text import MIMEText
+from dotenv import load_dotenv
+import shutil
+
+if os.path.isfile(os.getcwd()+"/.env"):
+    load_dotenv()
 
 term = os.environ.get('SEARCH_TERM', "")
 sleep = os.environ.get('SLEEP', 5)
@@ -14,9 +19,15 @@ toAddress = os.environ.get('TO_EMAIL', '')
 emailAppPassword = os.environ.get('APP_PASSWORD', '')
 os.environ['TZ'] = 'America/New_York'
 
-if not os.path.exists(os.getcwd()+'/json'):
-    os.mkdir(os.getcwd()+'/json')
+print(f"Starting variables set to: \n SEARCH_TERM={term} \n SLEEP={int(sleep)} \n FILE_NAME={jsonFile} \n FROM={fromAddress} \n TO={toAddress} \n PASSWORD={emailAppPassword}")
 
+if os.path.exists(os.getcwd()+'/json'):
+    try:
+        shutil.rmtree(os.getcwd()+'/json')
+    except OSError as e:
+        print("Error: %s - %s." % (e.filename, e.strerror))
+
+os.mkdir(os.getcwd()+'/json')
 backup = os.getcwd()+'/json'
 os.chdir(backup)
 
@@ -40,11 +51,11 @@ def neweggPage():
 
     itemsDict = neweggCreateDict(itemNames, itemPrices)
 
-    compare(itemsDict, 'newegg.json')
+    compare(itemsDict, jsonFile)
 
     jsonObj = json.dumps(itemsDict, indent=4)
     try:
-        with open("newegg.json", "w") as outFile:
+        with open(jsonFile, "w") as outFile:
             outFile.write(jsonObj)
         print("Success: File written")
     except Exception as e:
