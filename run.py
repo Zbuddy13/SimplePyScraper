@@ -61,16 +61,21 @@ def neweggPage():
     except Exception as e:
         print("Error: " + e.message)
 
-
+# add case that if there is a new entry
+# if the size of the new and old are different find the new entry and email
 def compare(newData, file):
     try:
         if os.path.isfile(backup+'/'+file):
             with open(file, 'r') as f:
                 oldData = json.load(f)
-            for item in newData:
-                if newData[item][0] != oldData[item][0]:
-                    emailChange(item+' Status Changed to '+ newData[item][0], " Link: " + newData[item][1])
-                    #print(item+' Status Changed to '+ newData[item][0] + "Link " + newData[item][1])
+            for item in newData: # add else case for new or removed listing(item removed)
+                if item in oldData:
+                    if newData[item][0] != oldData[item][0]:
+                        emailChange(item+' Status Changed to '+ newData[item][0], " Link: " + newData[item][1])
+                        #print(item+' Status Changed to '+ newData[item][0] + "Link " + newData[item][1])
+                else:
+                    if(len(newData) > len(oldData)):
+                        emailChange('New Item Added '+item+' Status '+ newData[item][0], " Link: " + newData[item][1])
     except Exception as e:
         print("Error: " + e.message)
 
