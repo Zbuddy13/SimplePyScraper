@@ -20,15 +20,23 @@ def neweggPage():
     itemPrices = soup.find_all('div', class_='item-button-area')
     filteredNames = [string for string in itemNames if "B580" in string.get_text()]
 
-    elements = len(filteredNames)
+    neweggJson(filteredNames, itemPrices)
 
+
+#def compare():
+
+def neweggJson(names, prices):
+
+    elements = len(names)
     thisDict = {}
     for i in range(elements):
-        thisDict[filteredNames[i].get_text()] = itemPrices[i].get_text()
+        thisDict[names[i].get_text()] = prices[i].get_text()
     
     thisJson = json.dumps(thisDict)
 
     print(thisJson)
+
+
 
 
 neweggPage()
