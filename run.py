@@ -12,6 +12,7 @@ jsonFile = os.environ.get('FILE_NAME', '')
 fromAddress = os.environ.get('FROM_EMAIL', '')
 toAddress = os.environ.get('TO_EMAIL', '')
 emailAppPassword = os.environ.get('APP_PASSWORD', '')
+os.environ['TZ'] = 'America/New_York'
 
 if not os.path.exists(os.getcwd()+'/json'):
     os.mkdir(os.getcwd()+'/json')
@@ -88,5 +89,5 @@ def emailChange(subject, text):
 
 neweggPage()
 scheduler = BlockingScheduler()
-scheduler.add_job(neweggPage,'interval', hours=int(sleep))
+scheduler.add_job(neweggPage,'interval', hours=int(float(sleep)))
 scheduler.start()
