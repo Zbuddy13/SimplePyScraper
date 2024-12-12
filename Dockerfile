@@ -21,7 +21,7 @@ ENV TO_EMAIL="TO_EMAIL"
 ENV APP_PASSWORD="APP_PASSWORD"
 
 #Run the main program
-CMD [ "python3", "run.py" ]
+CMD [ "python3", "-u", "run.py" ]
 
 #Compile on mac
 #sudo docker build . -t zbuddy19/autohetzner:
