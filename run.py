@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import json
 import os
 import smtplib
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 backup = os.getcwd()+'/json'
 os.chdir(backup)
@@ -17,7 +18,11 @@ def neweggButton():
     print(s.get_text())
 
 def neweggPage():
-    r = requests.get('https://www.newegg.com/p/pl?d=b580')
+    try:
+        r = requests.get('https://www.newegg.com/p/pl?d=b580')
+        print("Success: Website read")
+    except Exception as e:
+        print("Error: " + e.message)
 
     soup = BeautifulSoup(r.content, 'html.parser')
 
@@ -30,17 +35,24 @@ def neweggPage():
     compare(itemsDict, 'newegg.json')
 
     jsonObj = json.dumps(itemsDict, indent=4)
-    with open("newegg.json", "w") as outFile:
-        outFile.write(jsonObj)
+    try:
+        with open("newegg.json", "w") as outFile:
+            outFile.write(jsonObj)
+        print("Success: File written")
+    except Exception as e:
+        print("Error: " + e.message)
 
 
 def compare(newData, file):
-    if os.path.isfile(backup+'/'+file):
-        with open(file, 'r') as f:
-            oldData = json.load(f)
-        for item in newData:
-            if newData[item] != oldData[item]:
-                emailChange(item+' Status Changed')
+    try:
+        if os.path.isfile(backup+'/'+file):
+            with open(file, 'r') as f:
+                oldData = json.load(f)
+            for item in newData:
+                if newData[item] != oldData[item]:
+                    emailChange(item+' Status Changed')
+    except Exception as e:
+        print("Error: " + e.message)
 
 def neweggCreateDict(names, prices):
 
@@ -52,15 +64,21 @@ def neweggCreateDict(names, prices):
     return thisDict
 
 def emailChange(text):
-    smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
-    smtp_server.ehlo()
-    smtp_server.starttls()
-    smtp_server.login('jzshaw13@gmail.com', 'ikgn jyfk igms wvid')
+    try:
+        smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
+        smtp_server.ehlo()
+        smtp_server.starttls()
+        smtp_server.login('jzshaw13@gmail.com', 'ikgn jyfk igms wvid')
 
-    smtp_server.sendmail('jzshaw13@gmail.com', 'jzshaw18@gmail.com', text)
+        smtp_server.sendmail('jzshaw13@gmail.com', 'jzshaw18@gmail.com', text)
 
-    smtp_server.quit()
-    print('Email sent successfully')
+        smtp_server.quit()
+        print('Email sent successfully')
+    except Exception as e:
+        print("Error: " + e.message)
 
 
 neweggPage()
+scheduler = BlockingScheduler()
+scheduler.add_job(neweggPage,'interval', hours=0.015)
+scheduler.start()
