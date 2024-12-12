@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import os
+import smtplib
 
 backup = os.getcwd()+'/json'
 os.chdir(backup)
@@ -39,7 +40,7 @@ def compare(newData, file):
             oldData = json.load(f)
         for item in newData:
             if newData[item] != oldData[item]:
-                print(item+' Status Changed')
+                emailChange(item+' Status Changed')
 
 def neweggCreateDict(names, prices):
 
@@ -50,9 +51,16 @@ def neweggCreateDict(names, prices):
     
     return thisDict
 
-#def emailChange():
+def emailChange(text):
+    smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
+    smtp_server.ehlo()
+    smtp_server.starttls()
+    smtp_server.login('jzshaw13@gmail.com', 'ikgn jyfk igms wvid')
 
+    smtp_server.sendmail('jzshaw13@gmail.com', 'jzshaw18@gmail.com', text)
 
+    smtp_server.quit()
+    print('Email sent successfully')
 
 
 neweggPage()
