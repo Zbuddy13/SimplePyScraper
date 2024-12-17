@@ -1,0 +1,18 @@
+#
+# YAML Scheme
+#
+# websites: (list of websites to be checked)
+#   newegg: (website to be checked)
+#     in-stock:
+#       - b580
+#       - ...
+#   amazon:
+#     price:
+#       - https://www.amazon.com/MSI-GeForce-RTX-3060-12G/dp/B08WPRMVWB/ref=sr_1_1?crid=11FE8KDM4B4RQ&dib=eyJ2IjoiMSJ9.ZfUrwbLQlTjCdY2LUP-Qj-FrioLcbDh2TRCPJ-SkGPTGb5TmAC7Iq-ssKbSx6dZPv0Av1s3GHv_Ee16zgjc5ok9x9wYDWPg-rbZ-GUCQahj7I5MzxPr7gIjVvZYqHufi8wX6h8h-sctYjcm16ccxCeqUTs44SruKhEJ04FqNfU3HHqxGz_Q3GdqxRYMRlV-OGlN9h7679oVJ3ZLKBJQx73vSYmYmu8crkwN7mdfyZZ4.8oSmYHNwffx1bocF2P2J6I5pZnubWORHAHHu1ehHINs&dib_tag=se&keywords=3060&qid=1734395338&sprefix=3060%2Caps%2C166&sr=8-1
+#       - ...
+# args:
+#  interval: 1 (mins)
+#  from_email: 0 (sent from email for notifications)
+#  from_password: 0 (app password for email)
+#  to_email: 0 (email to send notifications to)
+#  tz: America/New_York (set time zone)

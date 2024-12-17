@@ -1,3 +1,7 @@
 
 json/newegg.json
 .env
+config.yaml
+modules/__pycache__/config.cpython-312.pyc
+websites/__pycache__/newegg.cpython-312.pyc
+websites/tmp.txt
